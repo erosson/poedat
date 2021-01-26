@@ -45,7 +45,7 @@ jobs:
             yarn fetch:auth && break || sleep 15;
           done
       - if: ${{ github.event.inputs.force_fetch }}
-        run: echo FORCE_FETCH >> assets/content/info.txt
+        run: echo "FORCE_FETCH=1" >> $GITHUB_ENV
       - run: yarn fetch
       - run: |
           echo 'STEAM_DEPOT_INFO_DIFF<<__EOF__' >> $GITHUB_ENV
@@ -53,7 +53,7 @@ jobs:
           echo '__EOF__' >> $GITHUB_ENV
           cat $GITHUB_ENV
 
-      # extract json from poe content, if it's changed
+      # extract dat from poe content, if it's changed
       - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
         run: yarn dist
       - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
