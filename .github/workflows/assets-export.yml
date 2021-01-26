@@ -22,6 +22,8 @@ jobs:
           echo "::add-mask::${{ secrets.STEAMPULL_PASSWD }}"
           echo "::add-mask::${{ secrets.STEAMPULL_SECRET }}"
       - uses: actions/checkout@v2
+        with:
+          submodules: true
       # https://github.com/marketplace/actions/setup-python
       - uses: actions/setup-python@v2
         with:
