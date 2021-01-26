@@ -3,4 +3,5 @@
 set -euo pipefail
 cd "`dirname "$0"`/.."
 
+pip install -r third-party/steampull/requirements-win.txt
 [ -f auth.env ] && . auth.env ; ./third-party/steampull/steampull auth
