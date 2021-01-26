@@ -1,0 +1,7 @@
+[submodule "third-party/steampull"]
+	path = third-party/steampull
+	url = https://github.com/erosson/steampull.git
+[submodule "third-party/PyPoE"]
+	path = third-party/PyPoE
+	url = https://github.com/erosson/PyPoE.git
+	branch = dev

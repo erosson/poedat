@@ -1,0 +1,60 @@
+name: assets-export
+on:
+  #schedule:
+  #  - cron: "5 1 * * *"
+  workflow_dispatch:
+    inputs:
+      force_fetch:
+        description: "force_fetch: if non-empty, rebuild even if there are no PoE content changes"
+        required: false
+        default: ''
+
+jobs:
+  # windows must run this, not ubuntu, as pypoe/our datamine export depends on packages/datamine/ooz.exe
+  fetch:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - run: |
+          echo "::add-mask::${{ secrets.STEAMPULL_USER }}"
+          echo "::add-mask::${{ secrets.STEAMPULL_PASSWD }}"
+          echo "::add-mask::${{ secrets.STEAMPULL_SECRET }}"
+      - uses: actions/checkout@v2
+      # https://github.com/marketplace/actions/setup-python
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      # https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-nodejs
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: yarn install --frozen-lockfile
+
+      # fetch poe content, if it's changed
+      - env:
+          STEAMPULL_USER: ${{ secrets.STEAMPULL_USER }}
+          STEAMPULL_PASSWD: ${{ secrets.STEAMPULL_PASSWD }}
+          STEAMPULL_SECRET: ${{ secrets.STEAMPULL_SECRET }}
+        # https://unix.stackexchange.com/questions/82598/how-do-i-write-a-retry-logic-in-script-to-keep-retrying-to-run-it-upto-5-times
+        run: |
+          for i in {1..3}; do
+            yarn fetch:auth && break || sleep 15;
+          done
+      - if: ${{ github.event.inputs.force_fetch }}
+        run: echo FORCE_FETCH >> assets/content/info.txt
+      - run: yarn fetch
+      - run: |
+          echo 'STEAM_DEPOT_INFO_DIFF<<__EOF__' >> $GITHUB_ENV
+          (diff assets/content/info-old.txt assets/content/info.txt || true) >> $GITHUB_ENV
+          echo '__EOF__' >> $GITHUB_ENV
+          cat $GITHUB_ENV
+
+      # extract json from poe content, if it's changed
+      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+        run: yarn dist
+      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+        run: echo "POE_VERSION=`cat dist/version.txt`" >> $GITHUB_ENV
+
+      # TODO: s3 push

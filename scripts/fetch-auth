@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+
+[ -f auth.env ] && . auth.env ; ./third-party/steampull/steampull auth

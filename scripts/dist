@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+
+#./scripts/dist-version
+#./scripts/dist-dat
+#./scripts/dist-passive-skill-tree.js
+./scripts/dist-zip

@@ -1,0 +1,16 @@
+{
+  "name": "poedat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Evan Rosson <git@erosson.org>",
+  "license": "GPL-3.0",
+  "private": true,
+  "scripts": {
+    "fetch:auth": "bash ./scripts/fetch-auth",
+    "fetch": "bash ./scripts/fetch",
+    "dist": "bash ./scripts/dist"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}

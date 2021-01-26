@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+
+# TODO: could narrow this down even more, probably
+curl https://poedat.erosson.org/depot-info.txt --output assets/content/info.txt
+./third-party/steampull/steampull --app 238960 --depot 238961 --output assets/content fetch --regex 'Bundles2\\(Data|Metadata|_\.index|_Preload|_Startup|_Tiny|_Login)'
+./third-party/steampull/steampull --app 238960 --depot 238962 --output assets/exe fetch --regex 'PathOfExileSteam.exe'

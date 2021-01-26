@@ -1,0 +1,14 @@
+/node_modules
+
+# temporary build files
+/build
+
+# uploaded to our webhost (s3?), no need to commit. also, too large for it
+/dist
+
+# fetched files, no need
+/assets/content/depot
+/assets/exe
+
+# secrets
+/auth.env
