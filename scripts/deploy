@@ -4,8 +4,7 @@ set -euo pipefail
 cd "`dirname "$0"`/.."
 
 # --size-only avoids re-uploading if only the timestamp changes
-# MSYS_NO_PATHCONV stops git-bash trying to be smart while I'm developing on windows. https://github.com/moby/moby/issues/24029#issuecomment-250412919
-aws s3 sync --exclude "*" --include "latest/*" --include poedat-latest.tar.gz --include depot-info.txt --include "*.html" --include "*.js" \
+aws s3 sync --exclude "*" --include "latest/*" --include poedat-latest.tar.gz --include depot-info.txt --include "*.html" \
   --size-only --acl public-read ./dist s3://poedat.erosson.org/ "$@"
 aws s3 sync --exclude "latest/*" --exclude poedat-latest.tar.gz --exclude depot-info.txt \
   --size-only --acl public-read --cache-control max-age=86400 ./dist s3://poedat.erosson.org/ "$@"

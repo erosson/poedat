@@ -3,5 +3,11 @@
 set -euo pipefail
 cd "`dirname "$0"`/.."
 
-cp third-party/s3-bucket-listing/index.html third-party/s3-bucket-listing/list.js dist/
-cp third-party/s3-bucket-listing/index.html dist/error.html
+# S3 doesn't have a builtin way to do directory listings, so generate static listings
+# https://stackoverflow.com/a/46383157/2782048
+# http://gnuwin32.sourceforge.net/packages/tree.htm
+TREE="`pwd`/third-party/tree/bin/tree"
+for d in `find dist -type d`; do
+  # `tee ./index.html > /dev/null` instead of `> ./index.html` avoids including index.html in the listing
+  (cd $d && rm -f ./index.html && $TREE -H . -L 1 --noreport --charset utf-8 | tee ./index.html > /dev/null)
+done
