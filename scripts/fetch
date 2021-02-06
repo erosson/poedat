@@ -5,7 +5,7 @@ cd "`dirname "$0"`/.."
 
 curl https://poedat.erosson.org/depot-info.txt --output assets/content/info.txt
 # manually-run CI might want to force a rebuild
-[ ! -z "$FORCE_FETCH" ] && echo __FORCE_FETCH__ >> assets/content/info.txt
+[ -v FORCE_FETCH ] && echo __FORCE_FETCH__ >> assets/content/info.txt
 # TODO: could narrow this down even more, probably
 ./third-party/steampull/steampull --app 238960 --depot 238961 --output assets/content fetch --regex 'Bundles2\\(Data|Metadata|_\.index|_Preload|_Startup|_Tiny|_Login)'
 ./third-party/steampull/steampull --app 238960 --depot 238962 --output assets/exe fetch --regex 'PathOfExileSteam.exe'
