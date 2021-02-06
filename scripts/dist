@@ -6,4 +6,5 @@ cd "`dirname "$0"`/.."
 #./scripts/dist-version
 #./scripts/dist-dat
 #./scripts/dist-passive-skill-tree.js
-./scripts/dist-zip
+#./scripts/dist-zip
+./scripts/dist-www-index
