@@ -6,11 +6,11 @@ cd "`dirname "$0"`/.."
 mkdir -p build/ooz
 PATH=$PATH:./build/ooz
 
-## --location follows redirects
-#curl --location https://github.com/erosson/ooz/releases/download/latest/bun_extract_file.exe --output build/ooz/bun_extract_file.exe
-#curl --location https://github.com/erosson/ooz/releases/download/latest/libbun.dll --output build/ooz/libbun.dll
-#curl --location https://github.com/erosson/ooz/releases/download/latest/ooz.exe --output build/ooz/ooz.exe
-#curl --location https://github.com/erosson/ooz/releases/download/latest/libooz.dll --output build/ooz/libooz.dll
+# `--location` follows redirects
+[ -f build/ooz/bun_extract_file.exe ] || curl --location https://github.com/erosson/ooz/releases/download/latest/bun_extract_file.exe --output build/ooz/bun_extract_file.exe
+[ -f build/ooz/libbun.dll ] || curl --location https://github.com/erosson/ooz/releases/download/latest/libbun.dll --output build/ooz/libbun.dll
+[ -f build/ooz/ooz.exe ] || curl --location https://github.com/erosson/ooz/releases/download/latest/ooz.exe --output build/ooz/ooz.exe
+[ -f build/ooz/libooz.dll ] || curl --location https://github.com/erosson/ooz/releases/download/latest/libooz.dll --output build/ooz/libooz.dll
 
 mkdir -p build/latest
 bun_extract_file list-files ./assets/content/depot | grep ".dat64" > build/latest/index.txt
