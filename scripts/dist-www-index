@@ -7,7 +7,12 @@ cd "`dirname "$0"`/.."
 # https://stackoverflow.com/a/46383157/2782048
 # http://gnuwin32.sourceforge.net/packages/tree.htm
 TREE="`pwd`/third-party/tree/bin/tree"
+TMP="`pwd`/build/tmp-index.html"
+[ ! -f "$TREE" ] && unzip third-party/tree-*-bin.zip -d build/tree
 for d in `find dist -type d`; do
-  # `tee ./index.html > /dev/null` instead of `> ./index.html` avoids including index.html in the listing
-  (cd $d && rm -f ./index.html && $TREE -H . -L 1 --noreport --charset utf-8 | tee ./index.html > /dev/null)
+  cd $d
+  rm -f ./index.html
+  $TREE -H . -L 1 --noreport --charset utf-8 > $TMP
+  mv $TMP ./index.html
+  cd -
 done
