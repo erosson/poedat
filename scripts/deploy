@@ -4,7 +4,7 @@ set -euo pipefail
 cd "`dirname "$0"`/.."
 
 # --size-only avoids re-uploading if only the timestamp changes
-aws s3 sync --exclude "*" --include "latest/*" --include poedat-latest.tar.gz --include depot-info.txt --include "*.html" \
+aws s3 sync --exclude "*" --include "latest/*" --include poedat-latest.tar.gz --include depot-info.txt --include index.html \
   --size-only --acl public-read ./dist s3://poedat.erosson.org/ "$@"
 aws s3 sync --exclude "latest/*" --exclude poedat-latest.tar.gz --exclude depot-info.txt \
   --size-only --acl public-read --cache-control max-age=86400 ./dist s3://poedat.erosson.org/ "$@"
