@@ -21,9 +21,16 @@ jobs:
           echo "::add-mask::${{ secrets.STEAMPULL_USER }}"
           echo "::add-mask::${{ secrets.STEAMPULL_PASSWD }}"
           echo "::add-mask::${{ secrets.STEAMPULL_SECRET }}"
+          echo "::add-mask::${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "::add-mask::${{ secrets.AWS_SECRET_ACCESS_KEY }}"
       - uses: actions/checkout@v2
         with:
           submodules: true
+      # early aws auth test. aws cli is installed on github runners by default
+      - env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: aws s3 ls s3://poedat.erosson.org
       # https://github.com/marketplace/actions/setup-python
       - uses: actions/setup-python@v2
         with:
