@@ -1,7 +1,7 @@
 name: assets-export
 on:
-  #schedule:
-  #  - cron: "5 1 * * *"
+  schedule:
+   - cron: "5 0 * * *"
   workflow_dispatch:
     inputs:
       force_fetch:
@@ -59,4 +59,20 @@ jobs:
       - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
         run: echo "POE_VERSION=`cat dist/version.txt`" >> $GITHUB_ENV
 
-      # TODO: s3 push
+      # deploy: s3 push and github release
+      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: yarn deploy
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Latest Build"
+          files: |
+            dist/latest/version.txt
+            dist/latest/version.json
+            dist/poedat-*.*.tar.gz

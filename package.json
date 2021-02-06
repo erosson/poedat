@@ -8,7 +8,8 @@
   "scripts": {
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
-    "dist": "bash ./scripts/dist"
+    "dist": "bash ./scripts/dist",
+    "deploy": "bash ./scripts/deploy"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
