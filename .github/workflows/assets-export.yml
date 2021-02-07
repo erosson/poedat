@@ -76,7 +76,8 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
         run: yarn deploy
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
