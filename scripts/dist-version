@@ -15,5 +15,5 @@ if [ -z $POE_VERSION ]; then
   echo "Failed to find poe version"
   exit 1
 fi
-echo "${POE_VERSION}" | tee build/version.txt | tee "build/latest/version.txt"
+echo "${POE_VERSION}" | tee "build/version.txt" | tee "build/latest/version.txt"
 echo "{\"version\":\"${POE_VERSION}\"}" > "build/latest/version.json"
