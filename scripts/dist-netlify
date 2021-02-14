@@ -11,9 +11,9 @@ main() {
   # netlify doesn't have aws installed
   # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
   if ! command -v aws; then
+    mkdir -p build
     # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o build/awscliv2.zip
-    mkdir -p build
     unzip build/awscliv2.zip -d build/awscliv2
     mkdir -p build/awscli
     ./build/awscliv2/aws/install --install-dir ./build/awscli/install --bin-dir build/awscli/bin
