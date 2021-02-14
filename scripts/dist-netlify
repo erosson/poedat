@@ -19,7 +19,7 @@ main() {
     mkdir -p build/awscli
     ./build/awscliv2/aws/install --install-dir ./build/awscli/install --bin-dir build/awscli/bin
     PATH=$PATH:`pwd`/build/awscli/bin
-    which aws
+    aws --version
   fi
 
   bash ./scripts/dist-s3-versions
