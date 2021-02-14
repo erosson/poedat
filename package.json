@@ -9,9 +9,15 @@
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
     "dist": "bash ./scripts/dist",
+    "start": "bash ./scripts/start",
     "deploy": "bash ./scripts/deploy"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "netlify-cli": "^3.7.1",
+    "serve": "^11.3.2"
   }
 }

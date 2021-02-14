@@ -9,39 +9,70 @@ STRINGS_EXE="`pwd`/build/strings/strings.exe"
 
 main() {
   build-version
+  POE_VERSION="`cat "build/latest/version.txt"`"
+
   build-latest-dat
   build-pypoe
   ./scripts/dist-passive-skill-tree.js
 
-  dist-latest
-  dist-www-index
+  dist-raw
+  #dist-s3
+  time dist-s3
+  dist-netlify dist/netlify-dev http://localhost:8000
+  dist-netlify dist/netlify-prod https://poedat.erosson.org
 }
 
-dist-www-index() {
-  # S3 doesn't have a builtin way to do directory listings, so generate static listings
-  # https://stackoverflow.com/a/46383157/2782048
-  # http://gnuwin32.sourceforge.net/packages/tree.htm
-  TREE="`pwd`/third-party/tree/bin/tree"
-  TMP="`pwd`/build/tmp-index.html"
-  [ ! -f "$TREE" ] && unzip third-party/tree-*-bin.zip -d build/tree
-  for d in `find dist -type d`; do
-    cd $d
-    rm -f ./index.html
-    $TREE -H . -L 1 --noreport --charset utf-8 > $TMP
-    mv $TMP ./index.html
-    cd -
+dist-s3() {
+  SRC="dist/raw/$POE_VERSION"
+  DST="dist/s3"
+  INDEX="$DST/versions/$POE_VERSION/index.json"
+  COUNT=`find "$SRC" -type f | wc -l`
+  rm -f "$INDEX"
+  mkdir -p "`dirname "$INDEX"`"
+  echo "{" >> "$INDEX"
+  i=0
+  for f in `find "$SRC" -type f -printf "%P\n"`; do
+    HASH=`sha256sum "$SRC/$f" | awk '{print $1}'`
+    DST_BY_HASH="$DST/by-sha256/$HASH/`basename $f`"
+    mkdir -p "`dirname "$DST_BY_HASH"`"
+    cp -f "$SRC/$f" "$DST_BY_HASH"
+
+    echo "  \"$f\": \"$HASH\"," >> "$INDEX"
+
+    i=$((i+1))
+    [ $((i % 10)) == 0 ] && echo "$i/$COUNT s3 files hashed..."
   done
+  sed -i '$ s/,$//' "$INDEX"    # remove the trailing comma. https://stackoverflow.com/questions/27305177/how-can-i-remove-the-last-character-of-a-file-in-unix
+  echo "}" >> "$INDEX"
+  echo "all s3 files hashed"
+
+  cp assets/content/info.txt "$DST/depot-info.txt"
 }
 
-dist-latest() {
-  rm -rf "dist/$POE_VERSION" dist/latest
-  mkdir -p dist/latest
-  cp -r build/latest "dist/$POE_VERSION"
-  cp build/latest/version* dist/latest
-  cp assets/content/info.txt dist/depot-info.txt
+dist-netlify() {
+  set -u   # just in case
+  DIST="$1";shift
+  S3_HOSTNAME="$1";shift
+  echo dist-netlify $DIST $S3_HOSTNAME
 
-  tar -cvzf "dist/poedat-latest.tar.gz" "dist/$POE_VERSION"
-  cp -f "dist/poedat-latest.tar.gz" "dist/poedat-$POE_VERSION.tar.gz"
+  rm -rf "$DIST"
+  mkdir -p "$DIST"
+  echo "/latest/*  /$POE_VERSION/:splat 302" >> "$DIST/_redirects"
+  echo "" >> "$DIST/_redirects"
+  INDEX="dist/s3/versions/$POE_VERSION/index.json"
+  node ./scripts/dist-netlify-redirects.js "$INDEX" "$POE_VERSION" "$S3_HOSTNAME" >> "$DIST/_redirects"
+  node ./scripts/dist-netlify-dirindex.js "$INDEX" "$POE_VERSION" "$DIST"
+
+  # TODO sync old versions from s3, add their redirects and dirindexes too
+  # TODO construct root index, with version list
+}
+
+dist-raw() {
+  rm -rf "dist/raw/$POE_VERSION"
+  mkdir -p dist/raw
+  cp -r build/latest "dist/raw/$POE_VERSION"
+
+  tar -cvzf "dist/raw/poedat-$POE_VERSION.tar.gz" "dist/raw/$POE_VERSION"
 }
 
 build-pypoe() {
