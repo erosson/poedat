@@ -18,9 +18,7 @@ main() {
     unzip build/awscliv2.zip -d build/awscliv2
     mkdir -p build/awscli
     ./build/awscliv2/aws/install --install-dir `pwd`/build/awscli/install --bin-dir `pwd`/build/awscli/bin
-    ls ./build/awscli/bin
     export PATH=$PATH:`pwd`/build/awscli/bin
-    ./build/awscli/bin/aws --version
     aws --version
   fi
 

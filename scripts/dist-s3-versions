@@ -7,4 +7,4 @@ rm -rf build/s3-versions dist/s3/versions.json dist/s3/versions.min.json
 aws s3 sync --no-sign-request s3://poedat.erosson.org/versions/ build/s3-versions
 mkdir -p dist/s3/versions
 [ -f build/latest/version.json ] && cp build/latest/version.json dist/s3/versions/latest.json
-./scripts/dist-s3-versions.js
+node ./scripts/dist-s3-versions.js
