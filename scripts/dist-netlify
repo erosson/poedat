@@ -17,7 +17,7 @@ main() {
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o build/awscliv2.zip
     unzip build/awscliv2.zip -d build/awscliv2
     mkdir -p build/awscli
-    ./build/awscliv2/aws/install --install-dir ./build/awscli/install --bin-dir ./build/awscli/bin
+    ./build/awscliv2/aws/install --install-dir `pwd`/build/awscli/install --bin-dir `pwd`/build/awscli/bin
     ls ./build/awscli/bin
     export PATH=$PATH:`pwd`/build/awscli/bin
     ./build/awscli/bin/aws --version
