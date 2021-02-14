@@ -8,7 +8,7 @@ ASSETS_PATH="`pwd`/assets/content/depot"
 STRINGS_EXE="`pwd`/build/strings/strings.exe"
 
 main() {
-  ./scripts/dist-s3-versions
+  bash ./scripts/dist-s3-versions
   POE_VERSION="`node -e "console.log(require('./dist/s3/versions/latest.json').version)"`"
 
   dist-netlify "dist/netlify-dev" http://localhost:8000

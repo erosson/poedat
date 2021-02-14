@@ -18,7 +18,7 @@ main() {
   dist-raw
   #dist-s3
   time dist-s3
-  ./scripts/dist-s3-versions
+  bash ./scripts/dist-s3-versions
 }
 
 dist-s3() {
