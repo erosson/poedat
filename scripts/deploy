@@ -7,5 +7,3 @@ cd "`dirname "$0"`/.."
 # this pushes one version at a time. do not ever `--delete`!
 aws s3 sync --size-only ./dist/s3 s3://poedat.erosson.org/ "$@"
 # --size-only --cache-control max-age=86400 ./dist s3://poedat.erosson.org/ "$@"
-
-# TODO netlify push

@@ -3,12 +3,11 @@ const fs = require("fs").promises
 const path = require("path")
 
 async function main() {
-  const versionsPath= process.argv[process.argv.length-2]
   const dist = process.argv[process.argv.length-1]
-  // console.error({versionsPath, dist})
+  const versions = JSON.parse(await fs.readFile("dist/s3/versions/index.json")).dirs
+  // console.error({versions, dist})
 
   const template = (await fs.readFile(path.join(__dirname, "dist-netlify-dirindex-template.html"))).toString()
-  const versions = JSON.parse(await fs.readFile(versionsPath))
   const contents = {files: [], dirs: [].concat(["latest"], versions.map(v => 'v/'+v))}
 
   const list = []

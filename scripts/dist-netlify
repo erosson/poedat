@@ -8,10 +8,8 @@ ASSETS_PATH="`pwd`/assets/content/depot"
 STRINGS_EXE="`pwd`/build/strings/strings.exe"
 
 main() {
-  rm -rf build/s3-sync
-  mkdir -p build/s3-sync
-  aws s3 sync --no-sign-request s3://poedat.erosson.org/versions build/s3-sync/versions
-  POE_VERSION="`cat "build/latest/version.txt"`"
+  ./scripts/dist-s3-versions
+  POE_VERSION="`node -e "console.log(require('./dist/s3/versions/latest.json').version)"`"
 
   dist-netlify "dist/netlify-dev" http://localhost:8000
   dist-netlify "dist/netlify-prod" https://poedat.erosson.org
@@ -22,25 +20,20 @@ dist-netlify() {
   S3_HOSTNAME="$1";shift
   echo dist-netlify $DIST $S3_HOSTNAME
 
-  rm -rf "$DIST" build/s3-sync-versions.json
+  rm -rf "$DIST"
   mkdir -p "$DIST"
-
-  echo "[" >> build/s3-sync-versions.json
-  for VERDIST in `find build/s3-sync/versions/* -type d` `find dist/s3/versions/* -type d || true`; do
+  for VERDIST in `find build/s3-versions/* -type d` `find dist/s3/versions/* -type d || true`; do
     POE_VERSION=`basename "$VERDIST"`
     node ./scripts/dist-netlify-redirects.js "$VERDIST/index.json" "$POE_VERSION" "$S3_HOSTNAME" >> "$DIST/_redirects"
     node ./scripts/dist-netlify-dirindex.js "$VERDIST/index.json" "$POE_VERSION" "$DIST/v"
-    echo "\"$POE_VERSION\"," >> build/s3-sync-versions.json
   done
-  sed -i '$ s/,$//' build/s3-sync-versions.json    # remove the trailing comma. https://stackoverflow.com/questions/27305177/how-can-i-remove-the-last-character-of-a-file-in-unix
-  echo "]" >> build/s3-sync-versions.json
 
   # latest version is the last one we processed above. TODO: better logic for this!
   echo "" >> "$DIST/_redirects"
   echo "/latest/*  /v/$POE_VERSION/:splat 302" >> "$DIST/_redirects"
   echo "/v  / 302" >> "$DIST/_redirects"
 
-  node ./scripts/dist-netlify-dirindex-root.js build/s3-sync-versions.json "$DIST"
+  node ./scripts/dist-netlify-dirindex-root.js "$DIST"
 }
 
 main "$@"
