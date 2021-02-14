@@ -8,6 +8,18 @@ ASSETS_PATH="`pwd`/assets/content/depot"
 STRINGS_EXE="`pwd`/build/strings/strings.exe"
 
 main() {
+  # netlify doesn't have aws installed
+  # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
+  if ! command -v aws; then
+    # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o build/awscliv2.zip
+    unzip build/awscliv2.zip -d build/awscliv2
+    mkdir -p build/awscli
+    ./build/awscliv2/aws/install --install-dir ./build/awscli/install --bin-dir build/awscli/bin
+    PATH=$PATH:`pwd`/build/awscli/bin
+    which aws
+  fi
+
   bash ./scripts/dist-s3-versions
   POE_VERSION="`node -e "console.log(require('./dist/s3/versions/latest.json').version)"`"
 
