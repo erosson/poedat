@@ -86,4 +86,4 @@ jobs:
           files: |
             dist/raw/*.*/version.txt
             dist/raw/*.*/version.json
-            dist/poedat-*.*.tar.gz
+            dist/raw/poedat-*.*.tar.gz
