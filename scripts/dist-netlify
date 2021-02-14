@@ -20,6 +20,7 @@ main() {
     ./build/awscliv2/aws/install --install-dir ./build/awscli/install --bin-dir ./build/awscli/bin
     ls ./build/awscli/bin
     export PATH=$PATH:`pwd`/build/awscli/bin
+    ./build/awscli/bin/aws --version
     aws --version
   fi
 
