@@ -11,7 +11,7 @@ async function main() {
   const index = JSON.parse(await fs.readFile(indexPath))
   Object.entries(index).map(([file, hash]) => {
     // TODO 301 (perm) redirect, not 302 (temp), once this is more stable. stronger caching that way
-    console.log(`/${poeVersion}/${file}\t${s3hostname}/by-sha256/${hash}/${path.basename(file)}\t302`)
+    console.log(`/v/${poeVersion}/${file}\t${s3hostname}/by-sha256/${hash}/${path.basename(file)}\t302`)
   })
 }
 main().catch(err => {

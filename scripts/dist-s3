@@ -18,8 +18,6 @@ main() {
   dist-raw
   #dist-s3
   time dist-s3
-  dist-netlify dist/netlify-dev http://localhost:8000
-  dist-netlify dist/netlify-prod https://poedat.erosson.org
 }
 
 dist-s3() {
@@ -47,24 +45,6 @@ dist-s3() {
   echo "all s3 files hashed"
 
   cp assets/content/info.txt "$DST/depot-info.txt"
-}
-
-dist-netlify() {
-  set -u   # just in case
-  DIST="$1";shift
-  S3_HOSTNAME="$1";shift
-  echo dist-netlify $DIST $S3_HOSTNAME
-
-  rm -rf "$DIST"
-  mkdir -p "$DIST"
-  echo "/latest/*  /$POE_VERSION/:splat 302" >> "$DIST/_redirects"
-  echo "" >> "$DIST/_redirects"
-  INDEX="dist/s3/versions/$POE_VERSION/index.json"
-  node ./scripts/dist-netlify-redirects.js "$INDEX" "$POE_VERSION" "$S3_HOSTNAME" >> "$DIST/_redirects"
-  node ./scripts/dist-netlify-dirindex.js "$INDEX" "$POE_VERSION" "$DIST"
-
-  # TODO sync old versions from s3, add their redirects and dirindexes too
-  # TODO construct root index, with version list
 }
 
 dist-raw() {

@@ -37,6 +37,7 @@ async function main() {
       .join("\n")
     const html = template
       .replace(/\{\{\$DIRNAME\}\}/g, path.join(poeVersion, dirname))
+      .replace(/\{\{\$DESC\}\}/g, "")
       .replace(/\{\{\$LIST\}\}/g, list)
     await fs.mkdir(path.join(dist, dirname), {recursive: true})
     await fs.writeFile(path.join(dist, dirname, "index.html"), html)
