@@ -84,6 +84,6 @@ jobs:
           prerelease: true
           title: "Latest Build"
           files: |
-            dist/latest/version.txt
-            dist/latest/version.json
+            dist/raw/*.*/version.txt
+            dist/raw/*.*/version.json
             dist/poedat-*.*.tar.gz
