@@ -9,7 +9,7 @@ async function main() {
 
   const template = (await fs.readFile(path.join(__dirname, "dist-netlify-dirindex-template.html"))).toString()
   const versions = JSON.parse(await fs.readFile(versionsPath))
-  const contents = {files: [], dirs: versions.map(v => 'v/'+v)}
+  const contents = {files: [], dirs: [].concat(["latest"], versions.map(v => 'v/'+v))}
 
   const list = []
     .concat(
