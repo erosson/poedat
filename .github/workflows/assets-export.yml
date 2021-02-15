@@ -89,9 +89,9 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
+      #- uses: actions/checkout@v2
+      #  with:
+      #    submodules: true
       - uses: netlify/actions/build@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
