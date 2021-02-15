@@ -4,7 +4,7 @@ set -euo pipefail
 cd "`dirname "$0"`/.."
 
 rm -rf build/s3-versions dist/s3/versions.json dist/s3/versions.min.json
-aws s3 sync --debug --no-sign-request s3://poedat.erosson.org/versions/ build/s3-versions
+aws s3 sync --region us-east-1 --debug --no-sign-request s3://poedat.erosson.org/versions/ build/s3-versions
 if [ -f build/latest/version.json ]; then
   # local dev run, after an s3 build
   mkdir -p dist/s3/versions
