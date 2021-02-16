@@ -82,17 +82,17 @@ jobs:
             dist/raw/*.*/version.json
             dist/raw/poedat-*.*.tar.gz
 
-  deploy-netlify:
-    runs-on: ubuntu-latest
-    needs: deploy-s3
-    defaults:
-      run:
-        shell: bash
-    steps:
-      #- uses: actions/checkout@v2
-      #  with:
-      #    submodules: true
-      - uses: netlify/actions/build@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #deploy-netlify:
+  #  runs-on: ubuntu-latest
+  #  needs: deploy-s3
+  #  defaults:
+  #    run:
+  #      shell: bash
+  #  steps:
+  #    #- uses: actions/checkout@v2
+  #    #  with:
+  #    #    submodules: true
+  #    - uses: netlify/actions/build@master
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
