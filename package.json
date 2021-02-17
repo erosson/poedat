@@ -15,6 +15,7 @@
     "deploy": "bash ./scripts/deploy"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.5.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {

@@ -5,5 +5,8 @@ cd "`dirname "$0"`/.."
 
 # --size-only avoids re-uploading if only the timestamp changes.
 # this pushes one version at a time. do not ever `--delete`!
-aws s3 sync --size-only ./dist/s3 s3://poedat.erosson.org/ "$@"
+# aws s3 sync --size-only ./dist/s3 s3://poedat.erosson.org/ "$@"
+aws s3 sync --size-only ./dist/s3 s3://poedat.erosson.org "$@"
 # --size-only --cache-control max-age=86400 ./dist s3://poedat.erosson.org/ "$@"
+
+node ./scripts/dist-s3-deploy.js
