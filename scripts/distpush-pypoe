@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# build *AND DEPLOY* pypoe output, split into one json file per dat.
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+. ./scripts/util.sh
+
+main() {
+  build-version
+  build-ooz
+  build-pypoe
+  cp -f build/version/version.json build/pypoe/dist
+  cp -f assets/content/info.txt build/pypoe/dist/depot-info.txt
+  build-targz
+
+  # deploy, also building dedupes/redirects and dirindexes
+  node ./scripts/s3dedupe.js build/pypoe/dist/ --bucket poedat.erosson.org --prefix pypoe/v1/ --tree "tree/$POE_VERSION/" --build build/pypoe/s3dedupe
+  node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix pypoe/v1 --tree tree --build build/pypoe/s3dirindex
+}
+
+build-targz() {
+  mv build/pypoe/dist "build/pypoe/pypoe-$POE_VERSION"
+  (cd build/pypoe && tar -czf "poedat-pypoe-$POE_VERSION.tar.gz" "pypoe-$POE_VERSION")
+  mv "build/pypoe/pypoe-$POE_VERSION" build/pypoe/dist
+  mv "build/pypoe/poedat-pypoe-$POE_VERSION.tar.gz" build/pypoe/dist/
+}
+
+build-pypoe() {
+  rm -rf build/pypoe/
+  mkdir -p build/pypoe/
+  (cd third-party/PyPoE && pip install -e .[cli-full])
+  pypoe_exporter config set ggpk_path $ASSETS_PATH
+
+  PYPOE_TARGET="`pwd`/build/pypoe/pypoe-$POE_VERSION.min.json"
+  (cd build/ooz && pypoe_exporter dat json "$PYPOE_TARGET")
+  node ./scripts/dist-pypoe-split.js "$PYPOE_TARGET" build/pypoe/dist/default/
+
+  for lang in `node --eval="require('./scripts/lang.json').map(l => console.log(l))"`; do
+    PYPOE_TARGET="`pwd`/build/pypoe/pypoe-$POE_VERSION-$lang.min.json"
+    (cd build/ooz && pypoe_exporter dat json --language "$lang" "$PYPOE_TARGET")
+    node ./scripts/dist-pypoe-split.js "$PYPOE_TARGET" "build/pypoe/dist/$lang/"
+  done
+}
+
+main "$@"

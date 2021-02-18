@@ -8,11 +8,14 @@
   "scripts": {
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
+    "distpush:pypoe": "bash ./scripts/distpush-pypoe",
     "dist": "yarn dist-s3",
     "deploy": "bash ./scripts/deploy"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.5.0",
+    "async": "^3.2.0",
+    "cli-progress": "^3.9.0",
     "glob": "^7.1.6",
     "minimist": "^1.2.5",
     "node-fetch": "^2.6.1",
