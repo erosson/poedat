@@ -12,7 +12,7 @@ main() {
   POE_VERSION="`cat "build/latest/version.txt"`"
 
   build-latest-dat
-  build-pypoe
+  #build-pypoe
   ./scripts/dist-passive-skill-tree.js
 
   dist-raw
@@ -52,6 +52,7 @@ dist-raw() {
   rm -rf "dist/raw/$POE_VERSION"
   mkdir -p dist/raw
   cp -r build/latest "dist/raw/$POE_VERSION"
+  # cp -r "build/pypoe/dat" "dist/raw/$POE_VERSION/pypoe"
 
   tar -cvzf "dist/raw/poedat-$POE_VERSION.tar.gz" "dist/raw/$POE_VERSION"
 }
@@ -63,11 +64,16 @@ build-pypoe() {
   PYPOE_TARGET="`pwd`/build/pypoe/pypoe-$POE_VERSION.min.json"
   mkdir -p build/pypoe/
 
-  cd build/ooz # pypoe insists on having libooz.dll in the current directory
   pypoe_exporter config set ggpk_path $ASSETS_PATH
-  pypoe_exporter dat json "$PYPOE_TARGET"
-  cd -
+  # `cd`: pypoe insists on having libooz.dll in the current directory
+  (cd build/ooz && pypoe_exporter dat json "$PYPOE_TARGET")
   node ./scripts/dist-pypoe-split.js "$PYPOE_TARGET" build/pypoe/dat
+
+  for lang in `node --eval="require('./scripts/lang.json').map(l => console.log(l))"`; do
+    PYPOE_TARGET_LANG="`pwd`/build/pypoe/pypoe-$POE_VERSION-$lang.min.json"
+    (cd build/ooz && pypoe_exporter dat json --language "$lang" "$PYPOE_TARGET_LANG")
+    node ./scripts/dist-pypoe-split.js "$PYPOE_TARGET_LANG" "build/pypoe/dat/$lang"
+  done
 }
 
 build-ooz() {
