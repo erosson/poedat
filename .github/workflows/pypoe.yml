@@ -1,7 +1,7 @@
-name: assets-export
+name: pypoe
 on:
   schedule:
-   - cron: "5 0 * * *"
+   - cron: "10 0 * * *"
   workflow_dispatch:
     inputs:
       force_fetch:
@@ -56,43 +56,22 @@ jobs:
           echo '__EOF__' >> $GITHUB_ENV
           cat $GITHUB_ENV
 
-      # extract dat from poe content, if it's changed
-      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
-        run: yarn dist-s3
-      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
-        run: echo "POE_VERSION=`cat dist/version.txt`" >> $GITHUB_ENV
-
-      # deploy: s3 push and github release
+      # build and deploy pypoe data
       - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
-        run: yarn deploy
+        run: yarn distpush-pypoe
 
       - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: "latest-pypoe"
           prerelease: true
-          title: "Latest Build"
+          title: "Latest PyPoE Build"
           files: |
-            dist/raw/*.*/version.txt
-            dist/raw/*.*/version.json
-            dist/raw/poedat-*.*.tar.gz
-
-  #deploy-netlify:
-  #  runs-on: ubuntu-latest
-  #  needs: deploy-s3
-  #  defaults:
-  #    run:
-  #      shell: bash
-  #  steps:
-  #    #- uses: actions/checkout@v2
-  #    #  with:
-  #    #    submodules: true
-  #    - uses: netlify/actions/build@master
-  #      env:
-  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+            build/version/version.txt
+            build/version/version.json
+            build/pypoe/dist/poedat-pypoe-*.*.tar.gz
