@@ -10,12 +10,13 @@ main() {
   build-ooz
   build-pypoe
   cp -f build/version/version.json build/pypoe/dist
-  cp -f assets/content/info.txt build/pypoe/dist/depot-info.txt
   build-targz
 
   # deploy, also building dedupes/redirects and dirindexes
-  node ./scripts/s3dedupe.js build/pypoe/dist/ --bucket poedat.erosson.org --prefix pypoe/v1/ --tree "tree/$POE_VERSION/" --build build/pypoe/s3dedupe
-  node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix pypoe/v1 --tree tree --build build/pypoe/s3dirindex
+  PREFIX=pypoe/v1
+  node ./scripts/s3dedupe.js build/pypoe/dist/ --bucket poedat.erosson.org --prefix "$PREFIX/" --tree "tree/$POE_VERSION/" --build build/pypoe/s3dedupe
+  node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix "$PREFIX/" --tree tree --build build/pypoe/s3dirindex
+  aws s3 cp assets/content/info.txt "s3://poedat.erosson.org/$PREFIX/depot-info.txt"
 }
 
 build-targz() {
