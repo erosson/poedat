@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-# set -x
-set -euo pipefail
-cd "`dirname "$0"`/.."
-
-concurrently -k \
-  "netlify dev -d dist/netlify-dev -p 8888" \
-  "serve dist/s3 -l 8000"

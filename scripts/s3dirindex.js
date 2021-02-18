@@ -20,7 +20,7 @@ async function main() {
   await s3.send(new S3.PutObjectCommand({
     Bucket: args.bucket,
     Key: `${args.prefix}index.json`,
-    "Content-Type": "application/json",
+    ContentType: "application/json",
     Body: JSON.stringify(indexFiles),
   }))
   const indexHtml = (await fs.promises.readFile(path.join(__dirname, 's3dirindex-template.html')))

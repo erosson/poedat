@@ -8,10 +8,7 @@
   "scripts": {
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
-    "dist": "yarn dist-s3 && yarn dist-netlify",
-    "dist-s3": "bash ./scripts/dist-s3",
-    "dist-netlify": "bash ./scripts/dist-netlify",
-    "start": "bash ./scripts/start",
+    "dist": "yarn dist-s3",
     "deploy": "bash ./scripts/deploy"
   },
   "dependencies": {
