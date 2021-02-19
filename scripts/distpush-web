@@ -6,11 +6,8 @@ cd "`dirname "$0"`/.."
 . ./scripts/util.sh
 
 main() {
-  build-version
-  
   rm -rf build/web
   mkdir -p build/web
-  cp -f build/version/version.json build/web
   node ./scripts/dist-passive-skill-tree.js build/web
   curl "https://api.pathofexile.com/leagues" --user-agent "curl from https://github.com/erosson/poedat" -o build/web/leagues.json
 
