@@ -2,6 +2,8 @@
 
 Data exported from Path of Exile, auto-updated once per day, hosted on the web for easy access. Use it in your PoE programs to keep up with PoE patch changes more easily.
 
+**This tool is for programmers. If you're not a programmer, try [poedb](https://poedb.tw/) instead?**
+
 * [PyPoE](https://github.com/OmegaK2/PyPoE) json data: https://poedat.erosson.org/pypoe/v1
   * [latest version](https://poedat.erosson.org/pypoe/v1/latest.json). old patches kept for at least six months
 * [bun_extract_file](https://github.com/zao/ooz)'s raw `.dat`s: https://poedat.erosson.org/dat/v1
