@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# build *AND DEPLOY* bun_extract_file output, split into one json file per dat.
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+. ./scripts/util.sh
+
+main() {
+  build-version
+  build-ooz
+  build-dat
+  cp -f build/version/version.json build/dat/dist
+  build-targz
+
+  # deploy, also building dedupes/redirects and dirindexes
+  PREFIX=dat/v1
+  node ./scripts/s3dedupe.js build/dat/dist/ --bucket poedat.erosson.org --prefix "$PREFIX/" --tree "tree/$POE_VERSION/" --build build/dat/s3dedupe
+  node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix "$PREFIX/" --tree tree --build build/dat/s3dirindex
+  aws s3 cp assets/content/info.txt "s3://poedat.erosson.org/$PREFIX/depot-info.txt"
+}
+
+build-targz() {
+  mv build/dat/dist "build/dat/dat-$POE_VERSION"
+  (cd build/dat && tar -czf "poedat-dat-$POE_VERSION.tar.gz" "dat-$POE_VERSION")
+  mv "build/dat/dat-$POE_VERSION" build/dat/dist
+  mv "build/dat/poedat-dat-$POE_VERSION.tar.gz" build/dat/dist/
+}
+
+build-dat() {
+  rm -rf build/dat/
+  mkdir -p build/dat/dist
+
+  bun_extract_file extract-files --regex ./assets/content/depot build/dat/dist ".*\.dat$"
+}
+
+main "$@"

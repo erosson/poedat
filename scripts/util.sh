@@ -1,11 +1,11 @@
 ASSETS_EXE_PATH="`pwd`/assets/exe/depot"
 ASSETS_PATH="`pwd`/assets/content/depot"
-STRINGS_EXE="`pwd`/build/strings/strings.exe"
 
 build-strings() {
   mkdir -p build/strings
-  [ ! -f "$STRINGS_EXE" ] && unzip third-party/Strings.zip -d build/strings
-  "$STRINGS_EXE" -accepteula >/dev/null 2>/dev/null || true
+  [ ! -f "build/strings/strings.exe" ] && unzip third-party/Strings.zip -d build/strings
+  strings -accepteula >/dev/null 2>/dev/null || true
+  PATH=$PATH:`pwd`/build/strings
 }
 
 build-ooz() {
@@ -25,7 +25,7 @@ build-version() {
     echo $POE_VERSION
   else
     mkdir -p build/version
-    POE_VERSION="`"$STRINGS_EXE" "$ASSETS_EXE_PATH/PathOfExileSteam.exe" | grep release/tags/ | sed -e "s_release/tags/__"`"
+    POE_VERSION="`strings "$ASSETS_EXE_PATH/PathOfExileSteam.exe" | grep release/tags/ | sed -e "s_release/tags/__"`"
     if [ -z $POE_VERSION ]; then
       echo "Failed to find poe version"
       exit 1
