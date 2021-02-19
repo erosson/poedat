@@ -14,9 +14,10 @@ main() {
 
   # deploy, also building dedupes/redirects and dirindexes
   PREFIX=pypoe/v1
+  aws s3 cp assets/content/info.txt "s3://poedat.erosson.org/$PREFIX/depot-info.txt"
+  aws s3 cp build/version/version.json "s3://poedat.erosson.org/$PREFIX/latest.json"
   node ./scripts/s3dedupe.js build/pypoe/dist/ --bucket poedat.erosson.org --prefix "$PREFIX/" --tree "tree/$POE_VERSION/" --build build/pypoe/s3dedupe
   node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix "$PREFIX/" --tree tree --build build/pypoe/s3dirindex
-  aws s3 cp assets/content/info.txt "s3://poedat.erosson.org/$PREFIX/depot-info.txt"
 }
 
 build-targz() {
