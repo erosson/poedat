@@ -11,6 +11,6 @@ Data exported from Path of Exile, auto-updated once per day, hosted on the web f
 
 **Make sure your programs follow 301 and 302 redirects**, because poedat redirects identical files to the same url. Data exported from PoE has lots of duplication (most data doesn't change across patches), so this saves me a lot of space.
 
-**Feel free to hotlink poedat.erosson.org, or use in your own buildbots.** These are all easily-cached static files, and the buildbot uses github's free runners, so hotlinking costs me nothing.
+**Feel free to hotlink poedat.erosson.org, or use in your own buildbots.** These are all easily-cached static files, so hotlinking costs me nothing.
 
 The repository's GPL license applies to only to the scripts and other files in the git repository. The generated files on poedat.erosson.org are not licensed, and belong mostly to GGG with credit to the PyPoE, libooz, and poe-wiki folks.
