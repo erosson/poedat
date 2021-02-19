@@ -9,9 +9,7 @@
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
     "distpush:pypoe": "bash ./scripts/distpush-pypoe",
-    "distpush:dat": "bash ./scripts/distpush-dat",
-    "dist": "yarn dist-s3",
-    "deploy": "bash ./scripts/deploy"
+    "distpush:dat": "bash ./scripts/distpush-dat"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.5.0",
