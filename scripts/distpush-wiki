@@ -6,6 +6,8 @@ cd "`dirname "$0"`/.."
 . ./scripts/util.sh
 
 main() {
+  build-version
+  
   rm -rf build/wiki
   mkdir -p build/wiki
   cp -f build/version/version.json build/wiki
