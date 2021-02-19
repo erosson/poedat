@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# build *AND DEPLOY* unversioned data from the poe website, like passives and league info.
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+. ./scripts/util.sh
+
+main() {
+  rm -rf build/web
+  mkdir -p build/web
+  cp -f build/version/version.json build/web
+  node ./scripts/dist-passive-skill-tree.js build/web
+  curl "https://api.pathofexile.com/leagues" --user-agent "curl from https://github.com/erosson/poedat" -o build/web/leagues.json
+
+  aws s3 sync build/web "s3://poedat.erosson.org/web/v1/"
+  node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix "web/v1/"
+}
+
+main "$@"

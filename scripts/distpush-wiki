@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# build *AND DEPLOY* unversioned data from the poe wiki.
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+. ./scripts/util.sh
+
+main() {
+  rm -rf build/wiki
+  mkdir -p build/wiki
+  cp -f build/version/version.json build/wiki
+  node ./scripts/wiki-atlasbase.js > build/wiki/atlasbase.json
+  node ./scripts/wiki-divcards.js > build/wiki/divcards.json
+
+  aws s3 sync build/wiki "s3://poedat.erosson.org/wiki/v1/"
+  node ./scripts/s3dirindex.js --bucket poedat.erosson.org --prefix "wiki/v1/"
+}
+
+main "$@"

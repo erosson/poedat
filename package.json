@@ -9,13 +9,17 @@
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
     "distpush:pypoe": "bash ./scripts/distpush-pypoe",
-    "distpush:dat": "bash ./scripts/distpush-dat"
+    "distpush:dat": "bash ./scripts/distpush-dat",
+    "distpush:web": "bash ./scripts/distpush-web",
+    "distpush:wiki": "bash ./scripts/distpush-wiki"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.5.0",
     "async": "^3.2.0",
     "cli-progress": "^3.9.0",
     "glob": "^7.1.6",
+    "jquery": "^3.5.1",
+    "jsdom": "^16.4.0",
     "minimist": "^1.2.5",
     "node-fetch": "^2.6.1",
     "tmp-promise": "^3.0.2"
