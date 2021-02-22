@@ -28,7 +28,8 @@ jobs:
           node-version: 12.x
 
       # fetch poe content, if it's changed
-      - env:
+      - name: Auth
+        env:
           STEAMPULL_USER: ${{ secrets.STEAMPULL_USER }}
           STEAMPULL_PASSWD: ${{ secrets.STEAMPULL_PASSWD }}
           STEAMPULL_SECRET: ${{ secrets.STEAMPULL_SECRET }}
@@ -47,7 +48,7 @@ jobs:
           cat $GITHUB_ENV
       - id: steamdiff
         # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
-        run: echo '::set-output name=STEAM_DEPOT_INFO_DIFF::$STEAM_DEPOT_INFO_DIFF'
+        run: echo "::set-output name=STEAM_DEPOT_INFO_DIFF::$STEAM_DEPOT_INFO_DIFF"
       # https://docs.github.com/en/actions/guides/storing-workflow-data-as-artifacts
       - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
         run: tar -czf assets.tar.gz assets/

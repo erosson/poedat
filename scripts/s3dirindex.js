@@ -58,7 +58,8 @@ async function runSync(src, dest, args=[]) {
   return new Promise((resolve, reject) => {
     console.log(`sync: ${src} --> ${dest}`)
     const p = child_process.spawn("aws", ["s3", "sync", src, dest].concat(args))
-    p.stdout.on('data', data => console.log(`${data}`))
+    // p.stdout.on('data', data => console.log(`${data}`))
+    p.stdout.on('data', data => null)
     p.stderr.on('data', data => console.error(`${data}`))
     p.on('close', code => {
       if (code) {
