@@ -10,23 +10,12 @@ on:
         default: ''
 
 jobs:
-  # windows must run this, not ubuntu, as bun_extract_file.exe is only built for windows
-  distpush:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
+  fetch:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      # early aws auth test. aws cli is installed on github runners by default
-      - run: aws --version
-      - env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
-        run: aws s3 ls s3://poedat.erosson.org
       # https://github.com/marketplace/actions/setup-python
       - uses: actions/setup-python@v2
         with:
@@ -35,7 +24,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - run: yarn install --frozen-lockfile
 
       # fetch poe content, if it's changed
       - env:
@@ -55,17 +43,50 @@ jobs:
           (diff assets/content/info-old.txt assets/content/info.txt || true) >> $GITHUB_ENV
           echo '__EOF__' >> $GITHUB_ENV
           cat $GITHUB_ENV
+      # https://docs.github.com/en/actions/guides/storing-workflow-data-as-artifacts
+      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+        run: tar -czf assets.tar.gz assets/
+      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: assets
+          path: assets.tar.gz
+          retention-days: 1
+
+  dat:
+    if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
+    needs: fetch
+    # windows must run this, not ubuntu, as bun_extract_file.exe is only built for windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      # https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-nodejs
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: yarn install --frozen-lockfile
+      - uses: actions/download-artifact@v2
+        with:
+          name: assets
+      - run: rm -rf assets && tar xfz assets.tar.gz
+      - run: ls
+      - run: ls assets
+      - run: ls assets/content
+      - run: ls assets/exe
 
       # build and deploy dat/extract_bun data
-      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
-        env:
+      - env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
         run: yarn distpush:dat
 
-      - if: ${{ env.STEAM_DEPOT_INFO_DIFF != '' }}
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest-dat"
