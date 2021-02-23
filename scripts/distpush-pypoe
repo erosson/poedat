@@ -9,7 +9,7 @@ main() {
   build-version
   build-ooz
   build-pypoe
-  cp -f build/version/version.json build/pypoe/dist
+  cp -f build/version/version.json scripts/lang.json build/pypoe/dist
   build-targz
 
   # deploy, also building dedupes/redirects and dirindexes
