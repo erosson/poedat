@@ -13,7 +13,7 @@ async function main() {
   const s3 = new S3.S3Client({region: 'us-east-1'})
 
   // pull tree, build dirindex, push tree
-  await runSync(`s3://${args.bucket}/${args.prefix}${args.tree || ''}`, args.build)
+  await runSync(`s3://${args.bucket}/${args.prefix}${args.tree}`, args.build)
 
   await buildDirectory(args.build, args, s3)
 
@@ -89,10 +89,11 @@ async function parseArgs(argv) {
     console.error(`usage: node s3dirindex.js --bucket BUCKET --prefix PREFIX [--tree TREE_PREFIX] [--build BUILD_DIR]`)
     process.exit(1)
   }
-  const {bucket, tree, dryrun} = args
+  const {bucket, dryrun} = args
   const prefix = args.prefix || '/'
   if (prefix && !prefix.endsWith('/')) throw new Error('--prefix must end with "/"')
   const build = await getBuildDir(args)
+  const tree = args.tree || ''
   return {prefix, bucket, tree, build, dryrun}
 }
 
