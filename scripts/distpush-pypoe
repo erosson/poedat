@@ -42,6 +42,8 @@ build-pypoe() {
     (cd build/ooz && pypoe_exporter dat json --language "$lang" "$PYPOE_TARGET")
     node ./scripts/dist-pypoe-split.js "$PYPOE_TARGET" "build/pypoe/dist/$lang/"
   done
+  mv -f build/pypoe/dist/default/pypoe.json build/pypoe/dist/pypoe.json
+  rm -f build/pypoe/dist/*/pypoe.json
 }
 
 main "$@"
