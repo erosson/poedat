@@ -8,6 +8,7 @@
   "scripts": {
     "fetch:auth": "bash ./scripts/fetch-auth",
     "fetch": "bash ./scripts/fetch",
+    "distpush:root": "bash ./scripts/distpush-root",
     "distpush:pypoe": "bash ./scripts/distpush-pypoe",
     "distpush:dat": "bash ./scripts/distpush-dat",
     "distpush:web": "bash ./scripts/distpush-web",

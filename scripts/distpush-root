@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# set -x
+set -euo pipefail
+cd "`dirname "$0"`/.."
+
+rm -rf build/root
+mkdir -p build/root
+BODY="`marked -i README.md`" envsubst < scripts/root/index.html > build/root/index.html
+aws s3 cp build/root/index.html "s3://poedat.erosson.org/index.html"
