@@ -32,7 +32,10 @@ build-version() {
       echo "Failed to find poe version"
       exit 1
     fi
-    POE_PATCH="`python ./scripts/build-version-patch.py`"
+    
+    # it's a little obnoxious - but copying the python script below lets us run python that depends on pypoe without installing pypoe, for a faster build
+    POE_PATCH="`cp -f ./scripts/build-version-patch.py third-party/PyPoE && cd third-party/PyPoE && python build-version-patch.py && rm -f build-version-patch.py`"
+
     echo "${POE_VERSION}" | tee "build/version/version.txt"
     echo "${POE_PATCH}" | tee "build/version/patch.txt"
     echo "{\"version\":\"${POE_VERSION}\",\"patch\":\"${POE_PATCH}\"}" > "build/version/version.json"
