@@ -22,7 +22,9 @@ build-version() {
   build-strings
   if [ -f build/version/version.txt ]; then
     POE_VERSION="`cat build/version/version.txt`"
+    POE_PATCH="`cat build/version/patch.txt`"
     echo $POE_VERSION
+    echo $POE_PATCH
   else
     mkdir -p build/version
     POE_VERSION="`strings "$ASSETS_EXE_PATH/PathOfExileSteam.exe" | grep release/tags/ | sed -e "s_release/tags/__"`"
@@ -30,7 +32,9 @@ build-version() {
       echo "Failed to find poe version"
       exit 1
     fi
+    POE_PATCH="`python ./scripts/build-version-patch.py`"
     echo "${POE_VERSION}" | tee "build/version/version.txt"
-    echo "{\"version\":\"${POE_VERSION}\"}" > "build/version/version.json"
+    echo "${POE_PATCH}" | tee "build/version/patch.txt"
+    echo "{\"version\":\"${POE_VERSION}\",\"patch\":\"${POE_PATCH}\"}" > "build/version/version.json"
   fi
 }
