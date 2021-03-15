@@ -25,7 +25,7 @@ Once a day, the buildbot checks to see if [PoE's Steam depot](https://steamdb.in
 
 ### What about [RePoE](https://github.com/brather1ng/RePoE)?
 
-RePoE is a similar project! It's been around much longer, and is very nice. pypoe-json aims for more complete, automatically updated data, with little to no preprocessing beyond what PyPoE gives us. Sometimes "less preprocessing" is less convenient to use; RePoE could be better for you.
+RePoE is a similar project! It's been around much longer, and is very nice. poedat aims for more complete, automatically updated data, with little to no preprocessing beyond what PyPoE gives us. Sometimes "less preprocessing" is less convenient to use; RePoE could be better for you.
 
 ### Couldn't I run PyPoE or bun_extract_file myself?
 
