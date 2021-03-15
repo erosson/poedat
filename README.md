@@ -29,7 +29,7 @@ RePoE is a similar project! It's been around much longer, and is very nice. poed
 
 ### Couldn't I run PyPoE or bun_extract_file myself?
 
-Sure, but now I hope you don't *have* to.
+Sure, but now I hope you don't *have* to. Having the data already exported helps me experiment faster and helps keep my programs updated.
 
 ### Non-English language support?
 
