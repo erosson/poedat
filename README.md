@@ -1,3 +1,9 @@
+# ⚠ **This project is no longer maintained.** 
+
+You should use [poe-dat-viewer](https://snosme.github.io/poe-dat-viewer/) instead. ([github](https://github.com/SnosMe/poe-dat-viewer))
+
+---
+
 # [poedat](https://github.com/erosson/poedat)
 
 Data exported from Path of Exile using [PyPoE](https://github.com/OmegaK2/PyPoE) and [bun_extract_file](https://github.com/zao/ooz), hosted online for easy access from your programs, auto-updated once per day.
